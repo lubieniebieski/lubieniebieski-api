@@ -1,5 +1,9 @@
-FROM ruby:3
+FROM ruby:3-alpine
+RUN apk add --no-cache --update \
+    build-base \
+    ruby-dev
 
+RUN
 ADD . /app
 WORKDIR /app
 RUN bundle install
