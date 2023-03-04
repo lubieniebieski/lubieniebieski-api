@@ -1,6 +1,8 @@
 require 'sinatra/base'
 require 'sinatra/reloader'
 require 'json'
+require 'pry'
+require 'http'
 
 # Main API class
 class LubieniebieskiAPI < Sinatra::Base
