@@ -3,9 +3,11 @@ require 'sinatra/reloader'
 require 'json'
 require 'pry'
 require 'http'
+require_relative 'lib/mastodon'
 
-# Main API class
 class LubieniebieskiAPI < Sinatra::Base
+  MY_MASTODON_ID = '109714665825852984'.freeze
+
   configure :development do
     register Sinatra::Reloader
   end
@@ -14,7 +16,8 @@ class LubieniebieskiAPI < Sinatra::Base
     content_type 'application/json'
   end
 
-  get '/links' do
-    IO.read('links.json')
+  get '/boosted_links' do
+    mastodon = Mastodon.new MY_MASTODON_ID
+    mastodon.boosted_links.map(&:to_h).to_json
   end
 end
