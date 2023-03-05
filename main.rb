@@ -28,7 +28,8 @@ class LubieniebieskiAPI < Sinatra::Base
     # TODO: get this from file
     pocket = PocketClient.new(ENV.fetch('POCKET_CONSUMER_KEY', nil), ENV.fetch('POCKET_ACCESS_TOKEN', nil))
     mastodon = Mastodon::Client.new MY_MASTODON_ID
-    (mastodon.boosted_links + pocket.links).map(&:to_h).to_json
+    links = (mastodon.boosted_links + pocket.links).sort_by(&:timestamp).reverse
+    links.map(&:to_h).to_json
   end
 
   get '/boosted_links' do

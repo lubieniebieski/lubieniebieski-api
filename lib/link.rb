@@ -6,7 +6,7 @@ class Link
     @title = title
     @description = description
     @source = source
-    @timestamp = timestamp
+    @timestamp = DateTime.parse(timestamp.to_s).to_datetime.to_s
   end
 
   def to_h
