@@ -3,6 +3,9 @@ require 'sinatra/reloader'
 require 'json'
 require 'pry'
 require 'http'
+require 'dotenv/load'
+
+require_relative 'lib/pocket_client'
 require_relative 'lib/mastodon'
 
 class LubieniebieskiAPI < Sinatra::Base
@@ -14,6 +17,11 @@ class LubieniebieskiAPI < Sinatra::Base
 
   before do
     content_type 'application/json'
+  end
+
+  get '/pocket_links' do
+    pocket = PocketClient.new(ENV.fetch('POCKET_CONSUMER_KEY', nil), ENV.fetch('POCKET_ACCESS_TOKEN', nil))
+    pocket.links.map(&:to_h).to_json
   end
 
   get '/boosted_links' do

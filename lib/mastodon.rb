@@ -3,6 +3,7 @@ require_relative 'link'
 require_relative 'mastodon/status'
 require_relative 'mastodon/card'
 require_relative 'mastodon/account'
+
 module Mastodon
   class Client
     def initialize(account_id)
@@ -28,7 +29,7 @@ module Mastodon
     def create_link_from_card(timestamp, card)
       Link.new(url: card.url, title: card.title,
                description: card.description,
-               timestamp:)
+               timestamp:, source: 'mastodon')
     end
   end
 end
