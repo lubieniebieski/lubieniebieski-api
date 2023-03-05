@@ -1,5 +1,4 @@
 require 'date'
-require 'pocket-ruby'
 require_relative 'link'
 
 class PocketClient
@@ -34,10 +33,8 @@ class PocketClient
   end
 
   def initialize(consumer_key, access_token)
-    Pocket.configure do |config|
-      config.consumer_key = consumer_key
-    end
-    @client = Pocket.client(access_token:)
+    @consumer_key = consumer_key
+    @access_token = access_token
   end
 
   def links
@@ -49,7 +46,11 @@ class PocketClient
   private
 
   def items
-    @client.retrieve(state: 'all', detailType: 'complete', count: 20).fetch('list').values.map do |v|
+    params = { consumer_key: @consumer_key, access_token: @access_token }
+             .merge({ state: 'all', detailType: 'complete', count: 20 })
+    response = HTTP.get('https://getpocket.com/v3/get', params:)
+    json = JSON.parse(response.body)
+    json.fetch('list').values.map do |v|
       Item.new(v)
     end
   end
