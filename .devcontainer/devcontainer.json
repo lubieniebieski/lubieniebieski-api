@@ -19,7 +19,8 @@
 			"extensions": [
 				"esbenp.prettier-vscode",
 				"misogi.ruby-rubocop",
-				"GitHub.copilot"
+				"GitHub.copilot",
+				"connorshea.vscode-ruby-test-adapter"
 			]
 		}
 	}

@@ -17,7 +17,7 @@ class LubieniebieskiAPI < Sinatra::Base
   end
 
   get '/boosted_links' do
-    mastodon = Mastodon.new MY_MASTODON_ID
+    mastodon = Mastodon::Client.new MY_MASTODON_ID
     mastodon.boosted_links.map(&:to_h).to_json
   end
 end
