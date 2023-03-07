@@ -22,6 +22,10 @@ module Mastodon
       Account.new @raw_data.fetch('id')
     end
 
+    def url
+      @raw_data.fetch('url')
+    end
+
     def reblog
       return if @raw_data.fetch('reblog').nil?
 

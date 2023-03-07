@@ -21,15 +21,17 @@ module Mastodon
     def boosted_links
       last_statuses.reject { |s| s.reblog.nil? || s.reblog.card.nil? }
                    .map(&:reblog)
-                   .map { |s| create_link_from_card(s.created_at, s.card) }
+                   .map { |s| create_link_from_status(s) }
     end
 
     private
 
-    def create_link_from_card(timestamp, card)
+    def create_link_from_status(status)
+      card = status.card
       Link.new(url: card.url, title: card.title,
                description: card.description,
-               timestamp:, source: 'mastodon')
+               timestamp: status.created_at, source: 'mastodon',
+               source_url: status.url)
     end
   end
 end
