@@ -7,10 +7,6 @@ class PocketClient
       @data = data
     end
 
-    def tags
-      @data.fetch('tags', {}).keys
-    end
-
     def url
       @data.fetch('resolved_url')
     end
@@ -20,7 +16,11 @@ class PocketClient
     end
 
     def public?
-      tags.include?('public')
+      all_tags.include?('public')
+    end
+
+    def tags
+      all_tags.reject { |t| t == 'public' }
     end
 
     def description
@@ -29,6 +29,12 @@ class PocketClient
 
     def timestamp
       Time.at(@data.fetch('time_added').to_i).to_datetime
+    end
+
+    private
+
+    def all_tags
+      @data.fetch('tags', {}).keys
     end
   end
 
@@ -57,6 +63,6 @@ class PocketClient
 
   def create_link_from_item(item)
     Link.new(url: item.url, title: item.title, timestamp: item.timestamp, description: item.description,
-             source: 'pocket')
+             source: 'pocket', tags: item.tags)
   end
 end
