@@ -5,3 +5,6 @@ server:
 
 lint:
 	bundle exec rubocop -A
+
+deploy:
+	flyctl deploy
