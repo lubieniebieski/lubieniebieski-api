@@ -8,3 +8,6 @@ lint:
 
 deploy:
 	flyctl deploy
+
+update_links:
+	bundle exec rake links:update

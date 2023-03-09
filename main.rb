@@ -4,13 +4,14 @@ require 'json'
 require 'pry'
 require 'http'
 require 'dotenv/load'
+require 'rake'
+Dir.glob('lib/tasks/*.rake').each { |r| load r }
 
 require_relative 'lib/pocket_client'
 require_relative 'lib/mastodon'
+require_relative 'lib/link_repository'
 
 class LubieniebieskiAPI < Sinatra::Base
-  MY_MASTODON_ID = '109714665825852984'.freeze
-
   configure :development do
     register Sinatra::Reloader
   end
@@ -19,21 +20,8 @@ class LubieniebieskiAPI < Sinatra::Base
     content_type 'application/json'
   end
 
-  get '/pocket_links' do
-    pocket = PocketClient.new(ENV.fetch('POCKET_CONSUMER_KEY', nil), ENV.fetch('POCKET_ACCESS_TOKEN', nil))
-    pocket.links.map(&:to_h).to_json
-  end
-
   get '/links' do
-    # TODO: get this from file
-    pocket = PocketClient.new(ENV.fetch('POCKET_CONSUMER_KEY', nil), ENV.fetch('POCKET_ACCESS_TOKEN', nil))
-    mastodon = Mastodon::Client.new MY_MASTODON_ID
-    links = (mastodon.boosted_links + pocket.links).sort_by(&:timestamp).reverse
-    links.map(&:to_h).to_json
-  end
-
-  get '/boosted_links' do
-    mastodon = Mastodon::Client.new MY_MASTODON_ID
-    mastodon.boosted_links.map(&:to_h).to_json
+    Rake::Task['links:generate'].invoke unless File.exist?('data.json')
+    LinkRepository.from_file('data.json').to_json
   end
 end
