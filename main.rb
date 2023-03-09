@@ -11,6 +11,8 @@ require_relative 'lib/pocket_client'
 require_relative 'lib/mastodon'
 require_relative 'lib/link_repository'
 
+JSON_DB_PATH = '/data/data.json'.freeze
+
 class LubieniebieskiAPI < Sinatra::Base
   configure :development do
     register Sinatra::Reloader
@@ -21,7 +23,7 @@ class LubieniebieskiAPI < Sinatra::Base
   end
 
   get '/links' do
-    Rake::Task['links:generate'].invoke unless File.exist?('data.json')
-    LinkRepository.from_file('data.json').to_json
+    Rake::Task['links:create'].invoke unless File.exist?(JSON_DB_PATH)
+    LinkRepository.from_file(JSON_DB_PATH).to_json
   end
 end

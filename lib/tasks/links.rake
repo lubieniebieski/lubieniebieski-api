@@ -1,5 +1,3 @@
-JSON_DB_PATH = File.join(__dir__, '..', '..', 'data', 'data.json')
-
 desc 'Generate list of links and save it to data.json file'
 task 'links:create' do
   pocket = PocketClient.new(ENV.fetch('POCKET_CONSUMER_KEY', nil), ENV.fetch('POCKET_ACCESS_TOKEN', nil))
