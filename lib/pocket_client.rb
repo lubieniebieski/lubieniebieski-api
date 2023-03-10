@@ -43,17 +43,17 @@ class PocketClient
     @access_token = access_token
   end
 
-  def links
-    items.select(&:public?).map do |i|
+  def links(size: 20)
+    items(size).select(&:public?).map do |i|
       create_link_from_item(i)
     end
   end
 
   private
 
-  def items
+  def items(count)
     params = { consumer_key: @consumer_key, access_token: @access_token }
-             .merge({ state: 'all', detailType: 'complete', count: 20 })
+             .merge({ state: 'all', detailType: 'complete', count: })
     response = HTTP.get('https://getpocket.com/v3/get', params:)
     json = JSON.parse(response.body)
     json.fetch('list').values.map do |v|

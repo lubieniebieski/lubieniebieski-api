@@ -10,7 +10,7 @@ end
 task 'links:update' do
   pocket = PocketClient.new(ENV.fetch('POCKET_CONSUMER_KEY', nil), ENV.fetch('POCKET_ACCESS_TOKEN', nil))
   mastodon = Mastodon::Client.new ENV.fetch('MASTODON_ID', nil)
-  links = (mastodon.boosted_links + pocket.links)
+  links = (mastodon.boosted_links + pocket.links(size: 200))
 
   repository = LinkRepository.from_file(JSON_DB_PATH)
   links.each do |link|
