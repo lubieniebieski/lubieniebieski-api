@@ -6,17 +6,17 @@ require 'pry'
 require 'rake'
 require 'sinatra/base'
 require 'sinatra/reloader'
-Dir.glob('lib/tasks/*.rake').each { |r| load r }
+require_relative 'lib/main_api'
 
-require_relative 'lib/pocket_client'
-require_relative 'lib/mastodon'
-require_relative 'lib/link_repository'
-
-JSON_DB_PATH = ENV.fetch('JSON_DB_PATH', 'data/data.json')
-
-class LubieniebieskiAPI < Sinatra::Base
+class Server < Sinatra::Base
   configure :development do
     register Sinatra::Reloader
+  end
+
+  helpers do
+    def api
+      @api ||= MainAPI.from_env(ENV)
+    end
   end
 
   before do
@@ -24,14 +24,13 @@ class LubieniebieskiAPI < Sinatra::Base
   end
 
   get '/links' do
-    Rake::Task['links:create'].invoke unless File.exist?(JSON_DB_PATH)
-    LinkRepository.from_file(JSON_DB_PATH).to_json
+    api.links.to_json
   end
 
   post '/refresh' do
     if request.env['HTTP_TOKEN'] == ENV.fetch('ACCESS_TOKEN', 'secret')
-      Rake::Task['links:create'].invoke unless File.exist?(JSON_DB_PATH)
-      Rake::Task['links:update'].invoke
+      api.create_links unless File.exist?(api.repository_path)
+      api.update_links!
       status 200
       { message: 'Refresh successful' }.to_json
     else

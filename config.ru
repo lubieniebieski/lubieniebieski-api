@@ -1,2 +1,2 @@
 require './main'
-run LubieniebieskiAPI
+run Server
