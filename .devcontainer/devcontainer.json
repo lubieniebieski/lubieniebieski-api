@@ -20,6 +20,7 @@
 				"esbenp.prettier-vscode",
 				"misogi.ruby-rubocop",
 				"GitHub.copilot",
+				"GitHub.copilot-chat",
 				"connorshea.vscode-ruby-test-adapter"
 			]
 		}
