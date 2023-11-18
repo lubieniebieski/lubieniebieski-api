@@ -38,6 +38,7 @@ class LinkRepository
     File.write(file_path, json)
   end
 
+  # rubocop:disable Metrics/AbcSize
   def update(url, options)
     link = find_by_url(url)
     link.title = options[:title] if options[:title]
@@ -48,4 +49,5 @@ class LinkRepository
     link.timestamp = options[:timestamp] if options[:timestamp]
     link
   end
+  # rubocop:enable Metrics/AbcSize
 end
