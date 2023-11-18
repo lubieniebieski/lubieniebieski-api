@@ -3,6 +3,8 @@ require 'http'
 require_relative 'link'
 
 class ReadwiseClient
+  PUBLIC_TAGS = %w[public bullets].freeze
+  
   class Item
     def initialize(data)
       @data = data
@@ -17,11 +19,11 @@ class ReadwiseClient
     end
 
     def public?
-      all_tags.include?('public') || all_tags.include?('bullets')
+      PUBLIC_TAGS.any? { |tag| all_tags.include?(tag) }
     end
 
     def tags
-      all_tags.reject { |t| t == 'public' }
+      all_tags.reject { |t| PUBLIC_TAGS.include?(t) }
     end
 
     def timestamp
