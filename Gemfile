@@ -10,4 +10,4 @@ gem 'sinatra'
 gem 'sinatra-reloader'
 gem 'thin'
 
-ruby '3.2.1'
+ruby '3.2.2'
