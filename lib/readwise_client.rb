@@ -4,14 +4,14 @@ require_relative 'link'
 
 class ReadwiseClient
   PUBLIC_TAGS = %w[public bullets].freeze
-  
+
   class Item
     def initialize(data)
       @data = data
     end
 
     def url
-      @data.fetch('url')
+      @data.fetch('source_url')
     end
 
     def title
