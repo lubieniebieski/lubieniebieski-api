@@ -37,7 +37,8 @@ class ReadwiseClient
     private
 
     def all_tags
-      @data.fetch('tags', {}).keys
+      tags = @data.fetch('tags', {})
+      tags.nil? ? [] : tags.keys
     end
   end
 
