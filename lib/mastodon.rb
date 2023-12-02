@@ -24,6 +24,14 @@ module Mastodon
                    .map { |s| create_link_from_status(s) }
     end
 
+    def toot_with_link(link)
+      toot = last_statuses.select(&:card)
+                          .find { |s| s.card.url == link }
+      return if toot.nil?
+
+      create_link_from_status(toot)
+    end
+
     private
 
     def create_link_from_status(status)

@@ -27,6 +27,16 @@ class Server < Sinatra::Base
     api.links.to_json
   end
 
+  get '/tootlink' do
+    response.headers['Access-Control-Allow-Origin'] = 'https://lubieniebieski.pl'
+    halt 400, { error: 'Missing url parameter' }.to_json if params[:url].nil?
+    puts params[:url]
+    link = api.url_to_mastodon_link(params[:url])
+    halt 204, { message: 'Toot not found' }.to_json if link.nil?
+    status 200
+    { message: 'Toot found', tootURL: link }.to_json
+  end
+
   post '/refresh' do
     if request.env['HTTP_TOKEN'] == ENV.fetch('ACCESS_TOKEN', 'secret')
       api.create_links unless File.exist?(api.repository_path)
