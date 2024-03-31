@@ -2,6 +2,7 @@ require_relative 'pocket_client'
 require_relative 'mastodon'
 require_relative 'readwise_client'
 require_relative 'link_repository'
+require_relative "omnivore_client"
 
 MainAPI = Struct.new(:pocket_client, :mastodon_client, :repository_path, :readwise_client) do
   def self.from_env(env)
@@ -9,11 +10,12 @@ MainAPI = Struct.new(:pocket_client, :mastodon_client, :repository_path, :readwi
     mastodon = Mastodon::Client.new env.fetch('MASTODON_ID', nil)
     readwise = ReadwiseClient.new(env.fetch('READWISE_TOKEN', nil))
     repository_path = env.fetch('JSON_DB_PATH', 'data/data.json')
+    omnivore = OmnivoreClient.new(env.fetch("OMNIVORE_TOKEN", nil))
     new(pocket, mastodon, repository_path, readwise)
   end
 
   def update_links!
-    links = (mastodon_client.boosted_links + pocket_client.links + readwise_client.links)
+    links = (mastodon_client.boosted_links + omnivore.saved_links)
     repository = LinkRepository.from_file(repository_path)
     links.each do |link|
       repository.add(link)
@@ -26,7 +28,7 @@ MainAPI = Struct.new(:pocket_client, :mastodon_client, :repository_path, :readwi
   end
 
   def create_links!
-    links = (mastodon_client.boosted_links + pocket_client.links)
+    links = (mastodon_client.boosted_links + omnivore.saved_links)
     LinkRepository.new(links).persist!(repository_path)
   end
 
