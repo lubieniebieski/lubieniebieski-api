@@ -9,5 +9,6 @@ gem 'rubocop', group: :development
 gem 'sinatra'
 gem 'sinatra-reloader'
 gem 'thin'
+gem "standard", group: :development
 
-ruby '3.2.2'
+ruby "3.3.0"
