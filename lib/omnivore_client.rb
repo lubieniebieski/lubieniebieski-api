@@ -99,10 +99,10 @@ class OmnivoreClient
     response = HTTP.get("https://api-prod.omnivore.app/api/graphql", params: {query: LINKS_QUERY}, headers: headers)
     data = JSON.parse(response.body)
     results = data["data"]["search"]["edges"]
-    results.each do |result|
+    results.map do |result|
       item = Item.new(result["node"])
       create_link_from_item(item) if item.public?
-    end
+    end.compact
   end
 
   def create_link_from_item(item)

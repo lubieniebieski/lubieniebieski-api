@@ -3,7 +3,7 @@ Link = Struct.new(:url, :title, :description, :source, :timestamp, :source_url, 
     timestamp = DateTime.parse(timestamp.to_s).to_datetime.to_s
     tags |= [source]
 
-    super(url:, title:, description:, source:, timestamp:, source_url:, tags:, commentary: nil)
+    super(url:, title:, description:, source:, timestamp:, source_url:, tags:, commentary:)
   end
 
   def id
@@ -19,7 +19,7 @@ Link = Struct.new(:url, :title, :description, :source, :timestamp, :source_url, 
       timestamp: hash.fetch("timestamp"),
       source_url: hash.fetch("source_url"),
       tags: hash.fetch("tags"),
-      commentary: hash.fetch("commentary")
+      commentary: hash.fetch("commentary", nil)
     )
   end
 end
