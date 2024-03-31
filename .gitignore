@@ -5,3 +5,6 @@ tmp
 /.bundle
 /.dotnet
 .DS_Store
+/.cache
+/.local
+.irb_history
