@@ -7,7 +7,7 @@ module Mastodon
     end
 
     def id
-      @raw_data.fetch('id')
+      @raw_data.fetch("id")
     end
   end
 end

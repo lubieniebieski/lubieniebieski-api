@@ -7,22 +7,22 @@ module Mastodon
     end
 
     def url
-      @raw_data.fetch('url')
+      @raw_data.fetch("url")
     end
 
     def title
-      @raw_data.fetch('title')
+      @raw_data.fetch("title")
     end
 
     def description
-      @raw_data.fetch('description')
+      @raw_data.fetch("description")
     end
 
     def to_h
       {
         url:,
         title:,
-        description:,
+        description:
       }
     end
   end

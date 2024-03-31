@@ -1,6 +1,6 @@
-require 'date'
-require 'http'
-require_relative 'link'
+require "date"
+require "http"
+require_relative "link"
 
 class ReadwiseClient
   PUBLIC_TAGS = %w[public bullets].freeze
@@ -11,11 +11,11 @@ class ReadwiseClient
     end
 
     def url
-      @data.fetch('source_url')
+      @data.fetch("source_url")
     end
 
     def title
-      @data.fetch('title')
+      @data.fetch("title")
     end
 
     def public?
@@ -27,17 +27,17 @@ class ReadwiseClient
     end
 
     def timestamp
-      DateTime.parse(@data.fetch('created_at'))
+      DateTime.parse(@data.fetch("created_at"))
     end
 
     def description
-      @data.fetch('summary')
+      @data.fetch("summary")
     end
 
     private
 
     def all_tags
-      tags = @data.fetch('tags', {})
+      tags = @data.fetch("tags", {})
       tags.nil? ? [] : tags.keys
     end
   end
@@ -45,7 +45,7 @@ class ReadwiseClient
   def initialize(token)
     @token = token
     @updated_after = DateTime.now.prev_day(100).to_s
-    @location = 'archive'
+    @location = "archive"
   end
 
   def links(size: 20)
@@ -57,17 +57,17 @@ class ReadwiseClient
   private
 
   def items(_count)
-    params = { updatedAfter: @updated_after, location: @location }
-    headers = { 'Authorization' => "Token #{@token}" }
-    response = HTTP.headers(headers).get('https://readwise.io/api/v3/list/', params:)
+    params = {updatedAfter: @updated_after, location: @location}
+    headers = {"Authorization" => "Token #{@token}"}
+    response = HTTP.headers(headers).get("https://readwise.io/api/v3/list/", params:)
     json = JSON.parse(response.body)
-    json.fetch('results').map do |result|
+    json.fetch("results").map do |result|
       Item.new(result)
     end
   end
 
   def create_link_from_item(item)
     Link.new(url: item.url, title: item.title, timestamp: item.timestamp, description: item.description,
-             source: 'readwise', tags: item.tags)
+      source: "readwise", tags: item.tags)
   end
 end

@@ -1,6 +1,6 @@
-require_relative 'link'
-require 'date'
-require 'json'
+require_relative "link"
+require "date"
+require "json"
 
 class LinkRepository
   def self.from_file(file_path)

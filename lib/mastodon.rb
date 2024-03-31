@@ -1,8 +1,8 @@
-require 'http'
-require_relative 'link'
-require_relative 'mastodon/status'
-require_relative 'mastodon/card'
-require_relative 'mastodon/account'
+require "http"
+require_relative "link"
+require_relative "mastodon/status"
+require_relative "mastodon/card"
+require_relative "mastodon/account"
 
 module Mastodon
   class Client
@@ -20,13 +20,13 @@ module Mastodon
 
     def boosted_links
       last_statuses.reject { |s| s.reblog.nil? || s.reblog.card.nil? }
-                   .map(&:reblog)
-                   .map { |s| create_link_from_status(s) }
+        .map(&:reblog)
+        .map { |s| create_link_from_status(s) }
     end
 
     def toot_with_link(link)
       toot = last_statuses.select(&:card)
-                          .find { |s| s.card.url == link }
+        .find { |s| s.card.url == link }
       return if toot.nil?
 
       create_link_from_status(toot)
@@ -37,9 +37,9 @@ module Mastodon
     def create_link_from_status(status)
       card = status.card
       Link.new(url: card.url, title: card.title,
-               description: card.description,
-               timestamp: status.created_at, source: 'mastodon',
-               source_url: status.url)
+        description: card.description,
+        timestamp: status.created_at, source: "mastodon",
+        source_url: status.url)
     end
   end
 end
