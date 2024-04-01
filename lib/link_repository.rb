@@ -30,6 +30,11 @@ class LinkRepository
     all.map(&:to_h).to_json
   end
 
+  def cleanup!
+    @links = @links.uniq(&:url)
+    @dirty = true
+  end
+
   def find_by_url(url)
     @links.find { |l| l.url == url }
   end
