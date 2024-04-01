@@ -74,7 +74,7 @@ class OmnivoreClient
     end
 
     def commentary
-      comment_data = @data["highlights"].find { |highlight| highlight["type"] == "NOTE" }
+      comment_data = @data["highlights"]&.find { |highlight| highlight["type"] == "NOTE" }
       comment_data&.fetch("annotation", nil)
     end
 
@@ -87,7 +87,7 @@ class OmnivoreClient
     end
 
     def all_tags
-      @data["labels"].map { |label| label["name"] }
+      @data["labels"]&.map { |label| label["name"] } || []
     end
   end
 

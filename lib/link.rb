@@ -1,3 +1,4 @@
+require "date"
 Link = Struct.new(:url, :title, :description, :source, :timestamp, :source_url, :tags, :commentary, keyword_init: true) do
   def initialize(url:, timestamp:, title: nil, description: nil, source: nil, source_url: nil, tags: [], commentary: nil)
     timestamp = DateTime.parse(timestamp.to_s).to_datetime.to_s
@@ -8,6 +9,14 @@ Link = Struct.new(:url, :title, :description, :source, :timestamp, :source_url, 
 
   def id
     url
+  end
+
+  def url
+    clean_url
+  end
+
+  def clean_url
+    self[:url].split("?").first
   end
 
   def self.from_hash(hash)
