@@ -1,9 +1,12 @@
 name: Deploy
 on:
-  push:
-    branches:
+  workflow_run:
+    workflows: 
+      - Run tests
+    types: 
+      - completed
+    branches: 
       - main
-     
 jobs:
   deploy:
     name: Deploy app
