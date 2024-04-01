@@ -47,4 +47,9 @@ class Server < Sinatra::Base
       halt 401, {error: "Unauthorized"}.to_json
     end
   end
+
+  get "/healthcheck" do
+    status 200
+    {message: "OK"}.to_json
+  end
 end
