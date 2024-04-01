@@ -5,9 +5,11 @@ gem "http"
 gem "json"
 gem "minitest"
 gem "pry"
-gem "sinatra"
+gem "rspec"
+gem "rspec-expectations"
 gem "sinatra-reloader"
-gem "thin"
+gem "sinatra"
 gem "standard", group: :development
+gem "thin"
 
 ruby "3.3.0"
