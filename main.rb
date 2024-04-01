@@ -40,9 +40,9 @@ class Server < Sinatra::Base
   post "/refresh" do
     if request.env["HTTP_TOKEN"] == ENV.fetch("ACCESS_TOKEN", "secret")
       api.create_links unless File.exist?(api.repository_path)
-      api.update_links!
+      repo = api.update_links!
       status 200
-      {message: "Refresh successful"}.to_json
+      {message: "Refresh successful!", lastUpdated: repo.last_updated, changed: repo.dirty?}.to_json
     else
       halt 401, {error: "Unauthorized"}.to_json
     end

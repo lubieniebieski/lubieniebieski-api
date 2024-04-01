@@ -11,10 +11,19 @@ class LinkRepository
 
   def initialize(links = [])
     @links = links
+    @dirty = false
   end
 
   def all
     @links
+  end
+
+  def last_updated
+    @links.map(&:timestamp).max
+  end
+
+  def dirty?
+    @dirty
   end
 
   def to_json(*_args)
@@ -26,16 +35,24 @@ class LinkRepository
   end
 
   def add(link)
-    @links << link unless find_by_url(link.url)
+    if find_by_url(link.url).nil?
+      @links << link
+      @dirty = true
+    end
   end
 
   def remove(url)
-    @links.delete_if { |l| l.url == url }
+    if find_by_url(url)
+      @links.delete_if { |l| l.url == url }
+      @dirty = true
+    end
   end
 
   def persist!(file_path)
-    json = JSON.pretty_generate(@links.sort_by(&:timestamp).reverse.map(&:to_h))
-    File.write(file_path, json)
+    if dirty?
+      json = JSON.pretty_generate(@links.sort_by(&:timestamp).reverse.map(&:to_h))
+      File.write(file_path, json)
+    end
   end
 
   # rubocop:disable Metrics/AbcSize

@@ -21,6 +21,7 @@ MainAPI = Struct.new(:pocket_client, :mastodon_client, :repository_path, :readwi
       repository.add(link)
     end
     repository.persist!(repository_path)
+    repository
   end
 
   def links
