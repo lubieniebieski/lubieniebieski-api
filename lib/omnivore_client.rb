@@ -74,7 +74,8 @@ class OmnivoreClient
     end
 
     def commentary
-      @data["highlights"].find { |highlight| highlight["type"] == "NOTE" }.fetch("annotation", nil)
+      comment_data = @data["highlights"].find { |highlight| highlight["type"] == "NOTE" }
+      comment_data&.fetch("annotation", nil)
     end
 
     def public?
