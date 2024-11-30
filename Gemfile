@@ -12,4 +12,4 @@ gem "sinatra-reloader"
 gem "sinatra"
 gem "standard", group: :development
 
-ruby "3.3.0"
+ruby "3.3.6"
