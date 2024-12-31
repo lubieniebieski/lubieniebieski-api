@@ -4,6 +4,7 @@ gem "dotenv"
 gem "http"
 gem "json"
 gem "minitest"
+gem "puma"
 gem "pry"
 gem "rspec"
 gem "rackup"
@@ -12,4 +13,4 @@ gem "sinatra-reloader"
 gem "sinatra"
 gem "standard", group: :development
 
-ruby "3.3.6"
+ruby "3.4.1"
