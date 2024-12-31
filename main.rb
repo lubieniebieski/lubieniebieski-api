@@ -23,6 +23,10 @@ class Server < Sinatra::Base
     content_type "application/json"
   end
 
+  get "/" do
+    {message: "Hello to you!"}.to_json
+  end
+
   get "/links" do
     api.links.to_json
   end
