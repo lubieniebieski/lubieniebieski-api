@@ -4,15 +4,44 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Install Ruby and gems
-        uses: ruby/setup-ruby@v1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          bundler-cache: true
+          persist-credentials: false
+      - name: Install Ruby through mise
+        uses: jdx/mise-action@d5574b52816a478f9d4e6529a3f6ff17a8a36785 # v5.2.8
+      - name: Install gems
+        run: mise run setup
       - name: Run tests
-        run: bundle exec rake spec
+        run: mise run test
+
+  build:
+    needs: test
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Build production image
+        run: docker build --tag lubieniebieski-api:ci .
+      - name: Smoke test production image
+        run: |
+          docker run --detach --name api-smoke --publish 127.0.0.1:8080:8080 lubieniebieski-api:ci
+          trap 'docker logs api-smoke; docker rm --force api-smoke' EXIT
+          curl --fail --silent --show-error --retry 20 --retry-all-errors --retry-delay 1 --max-time 5 http://127.0.0.1:8080/healthcheck

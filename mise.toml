@@ -1,0 +1,14 @@
+[tools]
+ruby = "4.0.9"
+
+[tasks.setup]
+description = "Install the Bundler version from Gemfile.lock and application gems"
+run = "gem install bundler -v 4.0.24 --no-document && bundle install"
+
+[tasks.test]
+description = "Run the CI test suite"
+run = ["bundle exec rake spec", "bundle exec ruby test/test_mastodon.rb"]
+
+[tasks.server]
+description = "Start the development server"
+run = "bundle exec rackup --host 0.0.0.0 -p 4567"

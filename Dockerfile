@@ -1,23 +1,23 @@
-ARG RUBY_VERSION=3.4.1
-FROM ruby:$RUBY_VERSION-slim as base
+ARG RUBY_VERSION=4.0.9
+FROM ruby:$RUBY_VERSION-slim AS base
 
 # Rack app lives here
 WORKDIR /app
 
-# Update gems and bundler
-RUN gem update --system --no-document && \
-    gem install -N bundler
+# Match the Bundler version in Gemfile.lock without upgrading RubyGems on every build.
+RUN gem install -N bundler -v 4.0.24
+ENV BUNDLE_FROZEN=true
 
 
 # Throw-away build stage to reduce size of final image
-FROM base as build
+FROM base AS build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential
 
 # Install application gems
-COPY Gemfile* .
+COPY Gemfile* .ruby-version ./
 RUN bundle install
 
 
